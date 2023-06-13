@@ -64,6 +64,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			: request.body;
 
 		let token = body?.['i'];
+		// https://datatracker.ietf.org/doc/html/rfc6750.html#section-2.1
 		if (request.headers.authorization?.startsWith('Bearer ')) {
 			token = request.headers.authorization.slice(7);
 		}
