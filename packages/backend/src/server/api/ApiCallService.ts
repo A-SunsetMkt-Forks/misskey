@@ -282,6 +282,7 @@ export class ApiCallService implements OnApplicationShutdown {
 				throw new ApiError({
 					message: 'You are not assigned to a moderator role.',
 					code: 'ROLE_PERMISSION_DENIED',
+					kind: 'permission',
 					id: 'd33d5333-db36-423d-a8f9-1a2b9549da41',
 				});
 			}
@@ -300,6 +301,7 @@ export class ApiCallService implements OnApplicationShutdown {
 				throw new ApiError({
 					message: 'You are not assigned to a required role.',
 					code: 'ROLE_PERMISSION_DENIED',
+					kind: 'permission',
 					id: '7f86f06f-7e15-4057-8561-f4b6d4ac755a',
 				});
 			}
@@ -309,6 +311,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			throw new ApiError({
 				message: 'Your app does not have the necessary permissions to use this endpoint.',
 				code: 'PERMISSION_DENIED',
+				kind: 'permission',
 				id: '1370e5b7-d4eb-4566-bb1d-7748ee6a1838',
 			});
 		}
