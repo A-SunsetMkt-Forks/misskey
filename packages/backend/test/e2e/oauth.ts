@@ -11,8 +11,8 @@ import pkceChallenge from 'pkce-challenge';
 import { JSDOM } from 'jsdom';
 import Fastify, { FastifyReply, type FastifyInstance } from 'fastify';
 import { type ImmediateSignup, port, relativeFetch, signup, startServer } from '../utils.js';
+import type { Endpoints } from 'misskey-js';
 import type { INestApplicationContext } from '@nestjs/common';
-import type { Note } from 'misskey-js/built/entities.js';
 
 const host = `http://127.0.0.1:${port}`;
 
@@ -224,7 +224,7 @@ describe('OAuth', () => {
 		});
 		assert.strictEqual(createResponse.status, 200);
 
-		const createResponseBody = await createResponse.json() as { createdNote: Note };
+		const createResponseBody = await createResponse.json() as Endpoints['notes/create']['res'];
 		assert.strictEqual(createResponseBody.createdNote.text, 'test');
 	});
 
@@ -303,10 +303,10 @@ describe('OAuth', () => {
 		});
 		assert.strictEqual(createResponseAlice.status, 200);
 
-		const createResponseBodyAlice = await createResponseAlice.json() as { createdNote: Note };
+		const createResponseBodyAlice = await createResponseAlice.json() as Endpoints['notes/create']['res'];
 		assert.strictEqual(createResponseBodyAlice.createdNote.user.username, 'alice');
 
-		const createResponseBodyBob = await createResponseBob.json() as { createdNote: Note };
+		const createResponseBodyBob = await createResponseBob.json() as Endpoints['notes/create']['res'];
 		assert.strictEqual(createResponseBodyBob.createdNote.user.username, 'bob');
 	});
 
