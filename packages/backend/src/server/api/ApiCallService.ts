@@ -58,15 +58,18 @@ export class ApiCallService implements OnApplicationShutdown {
 		endpoint: IEndpoint & { exec: any },
 		request: FastifyRequest<{ Body: Record<string, unknown> | undefined, Querystring: Record<string, unknown> }>,
 		reply: FastifyReply,
-	) {
+	): void {
 		const body = request.method === 'GET'
 			? request.query
 			: request.body;
 
-		let token = body?.['i'];
 		// https://datatracker.ietf.org/doc/html/rfc6750.html#section-2.1
-		if (request.headers.authorization?.startsWith('Bearer ')) {
-			token = request.headers.authorization.slice(7);
+		const { token, isBearer } = request.headers.authorization?.startsWith('Bearer ') ? {
+			token: request.headers.authorization.slice(7),
+			isBearer: true,
+		} : {
+			token: body?.['i'],
+			isBearer: false,
 		}
 		if (token != null && typeof token !== 'string') {
 			reply.code(400);
@@ -87,11 +90,20 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}).catch(err => {
 			if (err instanceof AuthenticationError) {
-				this.send(reply, 403, new ApiError({
-					message: 'Authentication failed. Please ensure your token is correct.',
-					code: 'AUTHENTICATION_FAILED',
-					id: 'b0a7f5f8-dc2f-4171-b91f-de88ad238e14',
-				}));
+				if (isBearer) {
+					// https://datatracker.ietf.org/doc/html/rfc6750.html#section-3.1
+					reply.code(401);
+					reply.send({
+						error: 'invalid_token',
+						error_description: 'Authentication failed. Please ensure your token is correct.',
+					});
+				} else {
+					this.send(reply, 401, new ApiError({
+						message: 'Authentication failed. Please ensure your token is correct.',
+						code: 'AUTHENTICATION_FAILED',
+						id: 'b0a7f5f8-dc2f-4171-b91f-de88ad238e14',
+					}));
+				}
 			} else {
 				this.send(reply, 500, new ApiError());
 			}
