@@ -58,7 +58,7 @@
 		"punycode": "2.3.0",
 		"querystring": "0.2.1",
 		"rollup": "4.1.4",
-		"sanitize-html": "2.11.0",
+		"sanitize-html": "2.12.1",
 		"sass": "1.69.4",
 		"strict-event-emitter-types": "2.0.0",
 		"textarea-caret": "3.1.0",
